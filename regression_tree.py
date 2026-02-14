@@ -1,5 +1,3 @@
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -47,3 +45,5 @@ if ssrs:
     best_split = potential_splits[best_split_index]
 
     print(f"\nBest split is at Dosage = {best_split:.2f} with a minimum SSR of {best_ssr:.2f}")
+
+#TO-DO; define a function called "Root Node" where it takes user input data and find the root node for the datasets.
