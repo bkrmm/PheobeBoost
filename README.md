@@ -1,5 +1,5 @@
 # Pheobe-Boost
-Developing my own XGBoost a Boosted Decision-Tree Algorithm from Scratch. 
+Developing my own Boosted Decision-Tree Algorithm from Scratch. 
 - Borrowing Ideas from XGBoost, CatBoost and many more.
 
 ## Plan
