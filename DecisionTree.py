@@ -97,3 +97,60 @@ class DecisionTree:
         information_gain = node_entropy - split_entropy
         
         #create node
+        node = TreeNode(data, split_feature_idx, split_feature_val, label_probabilites, information_gain)
+        
+        if self.min_samples_leaf > split_1_data.shape[0] or self.min_samples_leaf > split_2_data.shape[0]:
+            return node
+        
+        elif information_gain < self.min_information_gain:
+            return node
+            
+        current_depth += 1
+        node.left = self._create_tree(split_1_data, current_depth)
+        node.right = self._create_tree(split_2_data, current_depth)
+        
+        return node
+        
+    def _predict_one_sample(self, X: np.array) -> np.array:
+        node = self.tree 
+        
+        while node:
+            pred_probs = node.prediction_probs
+            if X[node.feature_idx] < node.feature_val:
+                node = node.left
+                
+            else:
+                node = node.right
+                
+        return pred_probs
+        
+    def train(self, X_train: np.array, Y_train: np.array) -> None:
+        self.labels_in_train = np.unique(Y_train)
+        train_data = np.concatenate((X_train, np.reshape(Y_train, (-1,1))), axis=1)
+        
+        self.tree = self._create_tree(data=train_data, current_depth=0)
+        
+        self.feature_importances = dict.fromkeys(range(X_train.shape[1], 0))
+        self._calculate_feature_importance(self.tree)
+        self.feature_importances = {k: v / total for total in (sum(self.feature_importances.values()),) for k, v in self.feature_importances.items()}
+    
+    def predict_proba(self, X_set: np.array) -> np.array:
+        pred_probs = self.predict_proba(X_set)
+        preds = np.argmax(pred_probs, axis=1)
+        
+        return preds
+        
+    def _print_recursive(self, node: TreeNode, level=0) -> None:
+        if node != None:
+            self._print_recursive(node.left, level1)
+            print('    ' * 4 * level + '-> ' + node.node_def())
+            self._print_recursive(node.right, leve+1)
+            
+    def print_tree(self) -> None:
+        self._print_recursive(node=self.tree)
+        
+    def _calculate_feature_importance(self, node):
+        if node != None:
+            self.feature_importances[node.feature_idx] += node.feature_importance
+            self._calculate_feature_importance(node.left)
+            self._calculate_feature_importance(node.right)~
