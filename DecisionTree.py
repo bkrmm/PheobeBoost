@@ -153,4 +153,4 @@ class DecisionTree:
         if node != None:
             self.feature_importances[node.feature_idx] += node.feature_importance
             self._calculate_feature_importance(node.left)
-            self._calculate_feature_importance(node.right)~
+            self._calculate_feature_importance(node.right)
