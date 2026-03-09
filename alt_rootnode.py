@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+"""
+This is an alternative Method of Root Node Detection
+"""
+
 Dosage = [2, 4, 6, 8, 11, 13, 16, 19, 22, 25, 26, 27, 28, 29, 32, 34, 36, 38, 40]
 Effectiveness = [0, 0, 0, 0, 5, 17, 100, 100, 100, 100, 65, 60, 55, 50, 45, 13, 0, 0, 0]
 
