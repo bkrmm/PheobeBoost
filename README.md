@@ -15,3 +15,6 @@ git fetch https://github.com/bkrmm/PheobeBoost
 ```bash
 python ntest.py
 ```
+## Plan
+1. Making the TUI more accessible and better suited for everyone. {Making it look good}
+2. Advance on the foundation of Decision Trees and make an Gradient Boosted Decision Tree Algorithm in the near future.
