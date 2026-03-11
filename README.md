@@ -6,7 +6,7 @@ Developing my own Boosted Decision-Tree Algorithm from Scratch.
 - Currently the only way to test the algorithm is by manually installing the repository via `git pull`.
 
 ```bash
-git fetch https://github.com/bkrmm/PheobeBoost 
+git clone https://github.com/bkrmm/PheobeBoost.git 
 ```
 - I am working deploying the repo as a library with PyPi.
 
