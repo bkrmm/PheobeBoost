@@ -3,7 +3,7 @@ Developing my own Boosted Decision-Tree Algorithm from Scratch.
 - Borrowing Ideas from XGBoost, CatBoost and many more.
 
 ## How to Install
-- Currently the only way to test the algorithm is by manually installing the repository via `git pull`.
+- Currently the only way to test the algorithm is by manually installing the repository via `git clone`.
 
 ```bash
 git clone https://github.com/bkrmm/PheobeBoost.git 
