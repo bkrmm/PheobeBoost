@@ -36,19 +36,23 @@ class DecisionTree:
         mask_below_threshold = data[:, feature_idx] < feature_val #Boolean Mask
         group1 = data[mask_below_threshold]
         group2 = data[~mask_below_threshold] # "~" symbol inverts the boolean mask!!
+        return group1, group2
         
     def _data_entropy(self, labels: list) -> float:
-        return self._entropy(self._)
+        return self._entropy(labels)
         
     def _partition_entropy(self, subsets: list)  -> float:
         """subsets = list of label lists"""
         total_count = sum(len(subset) for subset in subsets)
+        if total_count == 0:
+            return 0
         return sum([self._data_entropy(subset) * (len(subset) / total_count) for subset in subsets])
 
     def _best_split(self, data: np.array) -> tuple:
         min_split_entropy = 1e9
         min_entropy_feature_idx = None
         min_entropy_feature_val = None
+        group1_min, group2_min = None, None
 
         for idx in range(data.shape[1] - 1):
             feature_val = np.median(data[:, idx])
@@ -74,7 +78,7 @@ class DecisionTree:
         label_probabilities = np.zeros(len(self.labels_in_train), dtype=float)
         
         for i, label in enumerate(self.labels_in_train):
-            label_index = np.where(labels_as_integers == 1)[0]
+            label_index = np.where(labels_as_integers == label)[0]
             if len(label_index) > 0:
                 label_probabilities[i] = len(label_index)/total_labels
         return label_probabilities
@@ -93,12 +97,15 @@ class DecisionTree:
         label_probabilites = self._find_label_probs(data)
         
         #Calculate Information Gain
-        node_entropy = self._entropy(label_probabilites)
+        node_entropy = self._entropy(data[:, -1])
         information_gain = node_entropy - split_entropy
         
         #create node
         node = TreeNode(data, split_feature_idx, split_feature_val, label_probabilites, information_gain)
         
+        if split_1_data is None or split_2_data is None:
+            return node
+
         if self.min_samples_leaf > split_1_data.shape[0] or self.min_samples_leaf > split_2_data.shape[0]:
             return node
         
@@ -113,9 +120,12 @@ class DecisionTree:
         
     def _predict_one_sample(self, X: np.array) -> np.array:
         node = self.tree 
+        pred_probs = node.prediction_probs
         
         while node:
             pred_probs = node.prediction_probs
+            if node.left is None or node.right is None:
+                break
             if X[node.feature_idx] < node.feature_val:
                 node = node.left
                 
@@ -130,21 +140,20 @@ class DecisionTree:
         
         self.tree = self._create_tree(data=train_data, current_depth=0)
         
-        self.feature_importances = dict.fromkeys(range(X_train.shape[1], 0))
+        self.feature_importances = {i: 0.0 for i in range(X_train.shape[1])}
         self._calculate_feature_importance(self.tree)
-        self.feature_importances = {k: v / total for total in (sum(self.feature_importances.values()),) for k, v in self.feature_importances.items()}
+        total_importance = sum(self.feature_importances.values())
+        if total_importance > 0:
+            self.feature_importances = {k: v / total_importance for k, v in self.feature_importances.items()}
     
     def predict_proba(self, X_set: np.array) -> np.array:
-        pred_probs = self.predict_proba(X_set)
-        preds = np.argmax(pred_probs, axis=1)
-        
-        return preds
+        return np.array([self._predict_one_sample(X) for X in X_set])
         
     def _print_recursive(self, node: TreeNode, level=0) -> None:
         if node != None:
-            self._print_recursive(node.left, level1)
+            self._print_recursive(node.left, level + 1)
             print('    ' * 4 * level + '-> ' + node.node_def())
-            self._print_recursive(node.right, leve+1)
+            self._print_recursive(node.right, level + 1)
             
     def print_tree(self) -> None:
         self._print_recursive(node=self.tree)
