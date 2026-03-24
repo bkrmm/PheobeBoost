@@ -197,4 +197,3 @@ class DecisionTree:
             self.feature_importances[node.feature_idx] += node.feature_importance
             self._calculate_feature_importance(node.left)
             self._calculate_feature_importance(node.right)
- ##Komal is my sister
